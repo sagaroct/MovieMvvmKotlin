@@ -1,9 +1,8 @@
-package com.air.movieapp.network
+package com.air.movieapp.data.network
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import kotlin.jvm.Throws
 
 class NetworkUtils(context: Context?) {
     private val mContext: Context?

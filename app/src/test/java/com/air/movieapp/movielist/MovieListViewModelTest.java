@@ -1,15 +1,20 @@
 package com.air.movieapp.movielist;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.Observer;
 
 import com.air.movieapp.common.Constants;
-import com.air.movieapp.model.Movie;
-import com.air.movieapp.model.Results;
-import com.air.movieapp.network.MoviesRepository;
-import com.air.movieapp.network.NetworkUtils;
-import com.air.movieapp.network.ResponseCallback;
-import com.air.movieapp.viewmodel.MovieListViewModel;
+import com.air.movieapp.data.model.Movie;
+import com.air.movieapp.data.model.Results;
+import com.air.movieapp.data.network.MoviesRepository;
+import com.air.movieapp.data.network.NetworkUtils;
+import com.air.movieapp.data.network.ResponseCallback;
+import com.air.movieapp.view.movielist.viewmodel.MovieListViewModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,11 +29,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.atMost;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by sagar on 14/12/17.

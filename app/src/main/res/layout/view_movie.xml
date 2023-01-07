@@ -8,7 +8,7 @@
 
         <variable
             name="movie"
-            type="com.air.movieapp.model.Movie"/>
+            type="com.air.movieapp.data.model.Movie"/>
         <!--<variable name="listener" tycom.air.movieapp.adapter.movielist.MovieListAdapterpter.OnItemClickListener"/>-->
     </data>
 
@@ -30,6 +30,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            tools:text="Title"
             android:text="@{movie.title}"
             app:layout_constraintEnd_toStartOf="@+id/iv_rating"
             app:layout_constraintStart_toStartOf="parent"

@@ -1,10 +1,10 @@
-package com.air.movieapp.data
+/*
+package com.air.movieapp.data.database
 
 import android.content.Context
 import javax.inject.Singleton
 import dagger.Module
 import dagger.Provides
-import kotlin.jvm.Throws
 
 @Module
 class DataModule(mContext: Context) {
@@ -20,4 +20,4 @@ class DataModule(mContext: Context) {
     init {
         this.mContext = mContext
     }
-}
+}*/

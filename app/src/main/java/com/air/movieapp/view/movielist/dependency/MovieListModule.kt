@@ -1,8 +1,7 @@
-package com.air.movieapp.view.movielist
+package com.air.movieapp.view.movielist.dependency
 
 import android.content.Context
-import com.air.movieapp.adapter.movielist.MovieListAdapter
-import com.air.movieapp.model.Movie
+import com.air.movieapp.view.movielist.adapter.MovieListAdapter
 import dagger.Module
 import dagger.Provides
 

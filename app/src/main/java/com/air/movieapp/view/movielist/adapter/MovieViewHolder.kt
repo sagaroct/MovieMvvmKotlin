@@ -1,15 +1,15 @@
-package com.air.movieapp.adapter.movielist
+package com.air.movieapp.view.movielist.adapter
 
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.air.movieapp.databinding.ViewMovieConstraintBinding
+import com.air.movieapp.databinding.ViewMovieBinding
 
 /**
  * Created by sagar on 10/5/18.
  */
 class MovieViewHolder(view: View?) : RecyclerView.ViewHolder(view!!) {
-    var binding: ViewMovieConstraintBinding?
+    var binding: ViewMovieBinding?
 /*    private fun makeInvisibleTitlesVisible(movieList: List<Movie?>?) {
         for (movie in movieList!!) {
             movie?.isVisible = true

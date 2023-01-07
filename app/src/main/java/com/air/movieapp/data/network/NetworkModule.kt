@@ -1,41 +1,26 @@
-package com.air.movieapp.network
+package com.air.movieapp.data.network
 
 import android.content.Context
 import com.air.movieapp.BuildConfig
 import com.air.movieapp.common.RestConstants
-import com.air.movieapp.data.DatabaseHelper
-import java.io.IOException
-import javax.inject.Named
-import javax.inject.Singleton
+import com.air.movieapp.data.database.MovieDatabase
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.jvm.Throws
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
-class NetworkModule(context: Context?) {
-    private val mContext: Context?
+class NetworkModule(val context: Context) {
 
     @Provides
     @Singleton
     @Named("SimpleParsing")
     fun provideRetrofit(): Retrofit {
         val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-        builder.addInterceptor(object : Interceptor {
-            @Throws(IOException::class)
-            override fun intercept(chain: Interceptor.Chain): Response? {
-                val original: Request = chain.request()
-                val response: Response = chain.proceed(original)
-                response.cacheResponse()
-                return response
-            }
-        })
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor()
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -60,18 +45,14 @@ class NetworkModule(context: Context?) {
     @Provides
     @Singleton
     fun provideNetworkUtils(): NetworkUtils {
-        return NetworkUtils(mContext)
+        return NetworkUtils(context)
     }
 
     @Provides
     @Singleton
     @Named("SimpleService")
-    fun providesSimpleService(
-            @Named("SimpleInterface") apiInterface: MovieApiService, networkUtils: NetworkUtils, databaseHelper: DatabaseHelper): MoviesRepository {
-        return MoviesRepository(apiInterface, networkUtils, databaseHelper)
+    fun providesSimpleService(@Named("SimpleInterface") apiInterface: MovieApiService): MoviesRepository {
+        return MoviesRepository(apiInterface, MovieDatabase.getInstance(context))
     }
 
-    init {
-        mContext = context
-    }
 }

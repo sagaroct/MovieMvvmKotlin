@@ -1,5 +1,6 @@
-package com.air.movieapp.view.movielist
+package com.air.movieapp.view.movielist.dependency
 
+import com.air.movieapp.view.movielist.fragment.MovieListFragment
 import dagger.Subcomponent
 
 /**

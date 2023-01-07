@@ -15,13 +15,6 @@ abstract class BaseFragment : Fragment() {
         ADD, REPLACE, ADD_TO_BACK_STACK_AND_REPLACE, POP_BACK_STACK_AND_REPLACE, CLEAR_BACK_STACK_AND_REPLACE, ADD_TO_BACK_STACK_AND_ADD
     }
 
-    /**
-     * enum for identify fragment
-     */
-    enum class FragmentType {
-        PHOTO_LIST, PHOTO_DETAIL
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mFragmentInteractionListener = try {

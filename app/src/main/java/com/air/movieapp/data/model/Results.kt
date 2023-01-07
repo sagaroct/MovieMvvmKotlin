@@ -1,15 +1,15 @@
-package com.air.movieapp.model
+package com.air.movieapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
 /**
  * Created by sagar on 20/8/16.
  */
-class Results {
+data class Results (
     @SerializedName("page")
-    val page = 0
+    private val page: Int = 0,
 
     @SerializedName("results")
-    var movies: List<Movie>? = null
+    var movies: List<Movie>
 
-}
+)

@@ -2,11 +2,9 @@ package com.air.movieapp
 
 import android.app.Application
 import android.content.Context
-import com.air.movieapp.data.DataModule
-import com.air.movieapp.network.NetworkModule
-import com.air.movieapp.view.movielist.MovieListComponent
-import com.air.movieapp.view.movielist.MovieListModule
-import kotlin.jvm.Throws
+import com.air.movieapp.data.network.NetworkModule
+import com.air.movieapp.view.movielist.dependency.MovieListComponent
+import com.air.movieapp.view.movielist.dependency.MovieListModule
 
 /**
  * Created by sagar on 4/8/17.
@@ -19,11 +17,10 @@ class MovieApplication : Application() {
         super.onCreate()
         mAppComponent = DaggerAppComponent.builder()
                 .networkModule(NetworkModule(getApplicationContext()))
-                .dataModule(DataModule(getApplicationContext()))
                 .build()
     }
 
-    val appComponent: com.air.movieapp.AppComponent?
+    val appComponent: AppComponent?
         get() = mAppComponent
 
     fun createMovieListComponent(context: Context?): MovieListComponent? {
@@ -38,7 +35,7 @@ class MovieApplication : Application() {
     }
 
     companion object {
-        operator fun get(context: Context?): MovieApplication? {
+        operator fun get(context: Context?): MovieApplication {
             return context?.getApplicationContext() as MovieApplication
         }
     }

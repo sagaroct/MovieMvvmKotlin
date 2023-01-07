@@ -1,4 +1,4 @@
-package com.air.movieapp.view.movielist
+package com.air.movieapp.view.movielist.dependency
 
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
