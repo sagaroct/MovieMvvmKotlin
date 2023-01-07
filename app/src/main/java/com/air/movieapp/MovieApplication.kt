@@ -25,7 +25,7 @@ class MovieApplication : Application() {
 
     fun createMovieListComponent(context: Context?): MovieListComponent? {
         if (mMovieListComponent == null) {
-            mMovieListComponent = mAppComponent!!.plus(MovieListModule(context))
+            mMovieListComponent = mAppComponent!!.plus(MovieListModule())
         }
         return mMovieListComponent
     }

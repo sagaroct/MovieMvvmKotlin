@@ -36,7 +36,9 @@ constructor(private val moviesRepository: MoviesRepository, private val category
     fun load() {
         mProgressShow.set(true)
         viewModelScope.launch(Dispatchers.IO) {
-            listMutableLiveData.postValue(getMoviesFromNetwork(category, page))
+            val movies = getMoviesFromNetwork(category, page)
+            Log.d("MovieListViewModel", "movies: $movies")
+            listMutableLiveData.postValue(movies)
             mProgressShow.set(false)
         }
     }

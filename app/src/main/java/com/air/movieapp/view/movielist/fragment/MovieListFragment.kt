@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.air.movieapp.MovieApplication
 import com.air.movieapp.R
 import com.air.movieapp.view.movielist.adapter.MovieListAdapter
@@ -38,7 +35,7 @@ class MovieListFragment : BaseFragment() {
     lateinit var mMoviesRepository: MoviesRepository
 
     override fun setupFragmentComponent() {
-        MovieApplication.get(requireActivity()).appComponent?.plus(MovieListModule(requireActivity()))
+        MovieApplication.get(requireActivity()).appComponent?.plus(MovieListModule())
             ?.inject(this)
     }
 

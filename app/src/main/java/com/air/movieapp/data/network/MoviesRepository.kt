@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.*
 
     private suspend fun saveMovieList(category: String, results: Results): List<Movie> {
         setCategoryToMovies(category, results.movies)
-        localSource.insertAll(results.movies)
+        localSource.insertOrUpdate(results.movies)
         return getMoviesFromDb(category)
     }
 

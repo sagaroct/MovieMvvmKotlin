@@ -8,16 +8,16 @@ import android.widget.SearchView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import com.air.movieapp.MovieApplication
 import com.air.movieapp.R
 import com.air.movieapp.common.Constants
+import com.air.movieapp.common.Constants.CATEGORIES
 import com.air.movieapp.view.base.BaseActivity
+import com.air.movieapp.view.movielist.adapter.MovieListPagerAdapter
 import com.air.movieapp.view.movielist.fragment.MovieListFragment
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_home.*
 
 /**
  * Main Container where all movie fragments are added
@@ -26,31 +26,9 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
         initActionBar()
         initViewPager()
-    }
-
-    private fun initActionBar(){
-        setSupportActionBar(toolbar)
-        val actionBarDrawerToggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.app_name, R.string.app_name)
-        drawer_layout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-    }
-
-    private fun initViewPager() {
-        tabs.setupWithViewPager(viewpager)
-        setNavigationDrawer()
-        viewpager.offscreenPageLimit = 3
-        viewpager.adapter = getViewPagerAdapter()
-    }
-
-    private fun getViewPagerAdapter(): ViewPagerAdapter {
-        val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(MovieListFragment.newInstance(Constants.TOP_RATED), getString(R.string.top_rated))
-        adapter.addFragment(MovieListFragment.newInstance(Constants.UPCOMING), getString(R.string.upcoming))
-        adapter.addFragment(MovieListFragment.newInstance(Constants.POPULAR), getString(R.string.popular))
-        return adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -77,6 +55,26 @@ class HomeActivity : BaseActivity() {
         return true
     }
 
+    override fun onDestroy() {
+        MovieApplication[this@HomeActivity].releaseMovieListComponent()
+        super.onDestroy()
+    }
+
+    private fun initActionBar(){
+        setSupportActionBar(toolbar)
+        val actionBarDrawerToggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.app_name, R.string.app_name)
+        drawer_layout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+    }
+
+    private fun initViewPager() {
+        viewpager.adapter = MovieListPagerAdapter(this)
+        setNavigationDrawer()
+        TabLayoutMediator(tab_layout, viewpager) { tab, position ->
+            tab.text = CATEGORIES[position].uppercase()
+        }.attach()
+    }
+
     private fun setNavigationDrawer() {
         val navView: NavigationView = findViewById(R.id.navigation_view)
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -93,34 +91,6 @@ class HomeActivity : BaseActivity() {
     }
 
     override fun setupActivityComponent() {
-    }
-
-    internal inner class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
-        private val mFragmentList: ArrayList<MovieListFragment?> = ArrayList()
-        private val mFragmentTitleList: ArrayList<String?> = ArrayList()
-
-        override fun getItem(position: Int): MovieListFragment {
-            return mFragmentList[position]!!
-        }
-
-        override fun getCount(): Int {
-            return mFragmentList.size
-        }
-
-
-        fun addFragment(fragment: MovieListFragment?, title: String?) {
-            mFragmentList.add(fragment)
-            mFragmentTitleList.add(title)
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return mFragmentTitleList[position]
-        }
-    }
-
-    override fun onDestroy() {
-        MovieApplication[this@HomeActivity].releaseMovieListComponent()
-        super.onDestroy()
     }
 
     private val currentFragment: MovieListFragment?
