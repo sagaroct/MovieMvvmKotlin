@@ -18,7 +18,4 @@ abstract class MovieDao: BaseDao<Movie>() {
     @Insert
     abstract suspend fun insertAll(movies: List<Movie>)
 
-    /*@Delete
-    abstract fun delete(movie: Movie)*/
-
 }

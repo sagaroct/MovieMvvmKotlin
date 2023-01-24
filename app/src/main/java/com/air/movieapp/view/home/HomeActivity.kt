@@ -6,23 +6,24 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
-import com.air.movieapp.MovieApplication
 import com.air.movieapp.R
 import com.air.movieapp.common.Constants
 import com.air.movieapp.common.Constants.CATEGORIES
-import com.air.movieapp.view.base.BaseActivity
 import com.air.movieapp.view.movielist.adapter.MovieListPagerAdapter
 import com.air.movieapp.view.movielist.fragment.MovieListFragment
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
 
 /**
  * Main Container where all movie fragments are added
  */
-class HomeActivity : BaseActivity() {
+@AndroidEntryPoint
+class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +32,13 @@ class HomeActivity : BaseActivity() {
         initViewPager()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        val searchViewItem: MenuItem = menu!!.findItem(R.id.search)
+        val searchViewItem: MenuItem = menu.findItem(R.id.search)
         val searchView: SearchView = MenuItemCompat.getActionView(searchViewItem) as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                currentFragment!!.filter(query)
+            override fun onQueryTextSubmit(query: String): Boolean {
+                currentFragment?.filter(query)
                 return false
             }
 
@@ -50,14 +51,9 @@ class HomeActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_sort_title -> currentFragment!!.sortBy(Constants.SortType.TITLE)
+            R.id.menu_sort_title -> currentFragment?.sortBy(Constants.SortType.TITLE)
         }
         return true
-    }
-
-    override fun onDestroy() {
-        MovieApplication[this@HomeActivity].releaseMovieListComponent()
-        super.onDestroy()
     }
 
     private fun initActionBar(){
@@ -88,9 +84,6 @@ class HomeActivity : BaseActivity() {
             drawer_layout.closeDrawers()
             true
         }
-    }
-
-    override fun setupActivityComponent() {
     }
 
     private val currentFragment: MovieListFragment?

@@ -6,38 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.air.movieapp.MovieApplication
 import com.air.movieapp.R
-import com.air.movieapp.view.movielist.adapter.MovieListAdapter
 import com.air.movieapp.common.Constants
 import com.air.movieapp.common.Constants.TOP_RATED
-import com.air.movieapp.databinding.FragmentMovieBinding
+import com.air.movieapp.data.model.Movie
 import com.air.movieapp.data.network.MoviesRepository
-import com.air.movieapp.view.base.BaseFragment
-import com.air.movieapp.view.movielist.dependency.MovieListModule
+import com.air.movieapp.databinding.FragmentMovieBinding
+import com.air.movieapp.view.movielist.adapter.MovieListAdapter
 import com.air.movieapp.view.movielist.viewmodel.MovieListViewModel
 import com.air.movieapp.view.movielist.viewmodel.MovieListViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
 
 /**
  * Common fragment for all movie listing
  */
-class MovieListFragment : BaseFragment() {
+@AndroidEntryPoint
+class MovieListFragment : Fragment() {
     private lateinit var mMovieListViewModel: MovieListViewModel
     private lateinit var mFragmentMovieBinding: FragmentMovieBinding
 
-    @Inject
     lateinit var mMovieListAdapter: MovieListAdapter
 
-    @field:[Inject Named("SimpleService")]
+    @Inject
     lateinit var mMoviesRepository: MoviesRepository
-
-    override fun setupFragmentComponent() {
-        MovieApplication.get(requireActivity()).appComponent?.plus(MovieListModule())
-            ?.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,12 +52,13 @@ class MovieListFragment : BaseFragment() {
 
     private fun initViewModel(){
         val category = arguments?.getString(CATEGORY) ?: TOP_RATED
-        val factory = MovieListViewModelFactory(mMoviesRepository, category, 1)
+        val factory = MovieListViewModelFactory(mMoviesRepository, category)
         mMovieListViewModel = ViewModelProvider(this, factory).get(MovieListViewModel::class.java)
         mFragmentMovieBinding.setMovieListViewModel(mMovieListViewModel)
     }
 
     private fun setAdapter(){
+        mMovieListAdapter = MovieListAdapter(arrayListOf<Movie>())
         mFragmentMovieBinding.rvMovie.adapter = mMovieListAdapter
     }
 
@@ -77,8 +73,8 @@ class MovieListFragment : BaseFragment() {
         }
     }
 
-    fun filter(searchText: String?) {
-        mMovieListAdapter.getFilter().filter(searchText)
+    fun filter(searchText: String) {
+        mMovieListAdapter.filter.filter(searchText)
     }
 
     fun sortBy(sortType: Constants.SortType?) {

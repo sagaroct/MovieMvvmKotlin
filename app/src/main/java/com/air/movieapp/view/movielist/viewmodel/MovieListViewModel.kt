@@ -1,9 +1,7 @@
 package com.air.movieapp.view.movielist.viewmodel
 
-import android.os.Build
 import android.text.TextUtils
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,22 +9,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.air.movieapp.common.Constants
 import com.air.movieapp.data.model.Movie
+import com.air.movieapp.data.network.IMoviesRepository
 import com.air.movieapp.data.network.MoviesRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.launch
-import java.util.Collections
-import java.util.Comparator
+import java.util.*
 
 /**
  * Created by sagar on 26/9/17.
  */
-class MovieListViewModel @RequiresApi(api = Build.VERSION_CODES.N)
-constructor(private val moviesRepository: MoviesRepository, private val category: String, private val page: Int) : ViewModel() {
+class MovieListViewModel(
+    private val moviesRepository: IMoviesRepository,
+    private val category: String
+) : ViewModel() {
   
-    private val listMutableLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
     var mProgressShow: ObservableBoolean = ObservableBoolean(false)
 
+    private val listMutableLiveData: MutableLiveData<List<Movie>> = MutableLiveData()
     /**
      * Expose the LiveData Movies query so the UI can observe it.
      */
@@ -36,18 +39,21 @@ constructor(private val moviesRepository: MoviesRepository, private val category
     fun load() {
         mProgressShow.set(true)
         viewModelScope.launch(Dispatchers.IO) {
-            val movies = getMoviesFromNetwork(category, page)
+            val movies = getMoviesFromNetwork(page = 1)
             Log.d("MovieListViewModel", "movies: $movies")
             listMutableLiveData.postValue(movies)
             mProgressShow.set(false)
         }
     }
 
-    private suspend fun getMoviesFromNetwork(category: String, page: Int): List<Movie> {
+    /**
+     * For pagination pass the page number here.
+     */
+    suspend fun getMoviesFromNetwork(page: Int): List<Movie> {
         return moviesRepository.getMoviesFromApi(category, page)
             .retryWhen { _, attempt -> attempt < 3 }
             .catch { error ->
-                Log.e("MovieListViewModel","Catch ${error.message}")
+                Log.e(TAG,"getMoviesFromNetwork: ${error.message}")
                 emit(listOf())
             }.firstOrNull() ?: emptyList()
     }
@@ -69,6 +75,10 @@ constructor(private val moviesRepository: MoviesRepository, private val category
                 //TODO: Do nothing for now.
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "MovieListViewModel"
     }
 
 }

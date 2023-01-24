@@ -41,17 +41,7 @@ class MovieListAdapter(private val mMovieList: ArrayList<Movie>) : RecyclerView.
         notifyDataSetChanged()
     }
 
-    fun addData(data: List<Movie>) {
-        mMovieList.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    fun clearData() {
-        mMovieList.clear()
-        notifyDataSetChanged()
-    }
-
-    val filterList = object : Filter() {
+    private val filterList = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val filteredList = arrayListOf<Movie>()
             if (constraint == null || constraint.isEmpty()) {

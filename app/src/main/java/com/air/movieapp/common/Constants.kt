@@ -6,12 +6,15 @@ package com.air.movieapp.common
 object Constants {
 
 
+    object RestConstants {
+        const val BASE_URL: String = "https://api.themoviedb.org/3/"
+        const val AP_KEY: String = "4c989ba3813652e9f29d4dfd44bd34ad"
+    }
+
     const val TOP_RATED: String = "top_rated"
     private const val UPCOMING: String = "upcoming"
-    private const val POPULAR: String = "popular"
+    const val POPULAR: String = "popular"
     val CATEGORIES = arrayOf(TOP_RATED, UPCOMING, POPULAR)
-    const val PAGE_SIZE = 20
-    const val SETTINGS_REQUEST_CODE = 10
 
     enum class SortType {
         TITLE

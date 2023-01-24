@@ -26,13 +26,3 @@ data class Movie(
     var vote_average: Float = 0f,
 
     var type: String? = "")
-
-
-   /* constructor(title: String?, releaseDate: String?, overview: String?, voteAverage: Float, type: String?) {
-//        this.id = id;
-        this.title = title
-        release_date = releaseDate
-        this.overview = overview
-        vote_average = voteAverage
-        this.type = type
-    }*/
