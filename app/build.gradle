@@ -21,13 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    testOptions {
+  /*  testOptions {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
         unitTests.all {
             useJUnitPlatform()
         }
-    }
+    }*/
 /*    dataBinding {
         enabled = true
     }*/

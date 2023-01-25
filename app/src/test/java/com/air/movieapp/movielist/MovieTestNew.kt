@@ -6,7 +6,6 @@ import com.air.movieapp.common.Constants.POPULAR
 import com.air.movieapp.data.model.Movie
 import com.air.movieapp.data.network.NetworkUtils
 import com.air.movieapp.view.movielist.viewmodel.MovieListViewModel
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -17,7 +16,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.robolectric.annotation.Config
 
 /**
  * Created by sagar on 14/12/17.
@@ -27,7 +25,7 @@ import org.robolectric.annotation.Config
 /*@RunWith(RobolectricTestRunner::class)
 @Config(sdk = [30], application = HiltTestApplication::class)
 @HiltAndroidTest*/
-@Config(sdk = [30])
+//@Config(sdk = [30])
 @RunWith(AndroidJUnit4::class)
 class MovieTestNew {
     @Rule
