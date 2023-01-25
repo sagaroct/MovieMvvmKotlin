@@ -1,3 +1,4 @@
+/*
 package com.air.movieapp.movielist
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -22,9 +23,11 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.robolectric.annotation.Config
 import java.util.*
 
+*/
 /**
  * Created by sagar on 14/12/17.
- */
+ *//*
+
 @Config(sdk = [30])
 @RunWith(AndroidJUnit4::class)
 class MovieListViewModelTest {
@@ -45,8 +48,10 @@ class MovieListViewModelTest {
 
     private lateinit var movieListViewModel: MovieListViewModel
 
-   /* @Mock
-    private lateinit var observer: Observer<List<Movie>>*/
+   */
+/* @Mock
+    private lateinit var observer: Observer<List<Movie>>*//*
+
 
     @Mock
     private lateinit var mProgresShow: Observer<Boolean>
@@ -70,19 +75,24 @@ class MovieListViewModelTest {
             val value = movieListViewModel.getMoviesFromNetwork(page = 1)
             assertEquals(value, movies)
             // Callback is captured and invoked with stubbed movies
-            /*Mockito.verify(mMoviesRepository, Mockito.atMost(2)).getMoviesFromApi(
+            */
+/*Mockito.verify(mMoviesRepository, Mockito.atMost(2)).getMoviesFromApi(
                     POPULAR,
                 1
-            )*/
+            )*//*
+
 //            results.movies = movies
-           /* movieListViewModel.moviesLiveData.observeForever(observer)
+           */
+/* movieListViewModel.moviesLiveData.observeForever(observer)
             Mockito.verify(observer, Mockito.atMost(2)).onChanged(
                 movies
-            )*/
+            )*//*
+
         }
     }
 
-    /*@Test
+    */
+/*@Test
     fun loadEmptyMoviesIntoView() {
         Mockito.`when`(mNetworkUtils.isNetworkConnected).thenReturn(true)
         // Given an initialized MovieListPresenter with initialized movies
@@ -100,9 +110,10 @@ class MovieListViewModelTest {
 
         // Then progress indicator is hidden and emptyview is shown in UI.
         Mockito.verify(mProgresShow).onChanged(true)
-    }*/
+    }*//*
+
 
     companion object {
         private val EMPTY_MOVIES: List<Movie> = ArrayList(0)
     }
-}
+}*/

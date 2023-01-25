@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.air.movieapp.R
 import com.air.movieapp.common.Constants
 import com.air.movieapp.common.Constants.TOP_RATED
@@ -16,17 +16,16 @@ import com.air.movieapp.data.network.MoviesRepository
 import com.air.movieapp.databinding.FragmentMovieBinding
 import com.air.movieapp.view.movielist.adapter.MovieListAdapter
 import com.air.movieapp.view.movielist.viewmodel.MovieListViewModel
-import com.air.movieapp.view.movielist.viewmodel.MovieListViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Common fragment for all movie listing
  */
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
-    private lateinit var mMovieListViewModel: MovieListViewModel
+
+    private val mMovieListViewModel: MovieListViewModel by activityViewModels()
     private lateinit var mFragmentMovieBinding: FragmentMovieBinding
 
     lateinit var mMovieListAdapter: MovieListAdapter
@@ -42,19 +41,18 @@ class MovieListFragment : Fragment() {
         Log.d(TAG, "onCreateView: called")
         mFragmentMovieBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie, container, false)
-        val view: View = mFragmentMovieBinding.getRoot()
         initViewModel()
         setAdapter()
         applyObserver()
         loadData()
-        return view
+        return mFragmentMovieBinding.root
     }
 
     private fun initViewModel(){
-        val category = arguments?.getString(CATEGORY) ?: TOP_RATED
-        val factory = MovieListViewModelFactory(mMoviesRepository, category)
-        mMovieListViewModel = ViewModelProvider(this, factory).get(MovieListViewModel::class.java)
-        mFragmentMovieBinding.setMovieListViewModel(mMovieListViewModel)
+//        val category = arguments?.getString(CATEGORY) ?: TOP_RATED
+//        val factory = MovieListViewModelFactory(mMoviesRepository, category)
+//        mMovieListViewModel = ViewModelProvider(this, factory).get(MovieListViewModel::class.java)
+        mFragmentMovieBinding.movieListViewModel = mMovieListViewModel
     }
 
     private fun setAdapter(){
@@ -63,7 +61,8 @@ class MovieListFragment : Fragment() {
     }
 
     private fun loadData() {
-        mMovieListViewModel.load()
+        val category = arguments?.getString(CATEGORY) ?: TOP_RATED
+        mMovieListViewModel.load(category)
     }
 
     private fun applyObserver() {

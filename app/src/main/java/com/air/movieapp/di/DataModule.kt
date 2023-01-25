@@ -5,6 +5,7 @@ import com.air.movieapp.BuildConfig
 import com.air.movieapp.common.Constants
 import com.air.movieapp.data.database.MovieDatabase
 import com.air.movieapp.data.network.MovieApiService
+import com.air.movieapp.data.network.MoviesRepository
 import com.air.movieapp.data.network.NetworkUtils
 import dagger.Binds
 import dagger.Module
@@ -13,6 +14,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,6 +34,11 @@ object DataModule {
 
   @Provides
   fun provideDispatcher() = Dispatchers.IO
+
+  @Provides
+  fun providesMovieRepository(movieApiService: MovieApiService, movieDatabase: MovieDatabase,
+                              dispatcher: CoroutineDispatcher
+  ) = MoviesRepository(movieApiService, movieDatabase, dispatcher)
 
 
 }

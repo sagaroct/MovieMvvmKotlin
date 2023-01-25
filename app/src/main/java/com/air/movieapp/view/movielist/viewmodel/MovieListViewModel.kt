@@ -10,21 +10,21 @@ import androidx.lifecycle.viewModelScope
 import com.air.movieapp.common.Constants
 import com.air.movieapp.data.model.Movie
 import com.air.movieapp.data.network.IMoviesRepository
-import com.air.movieapp.data.network.MoviesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by sagar on 26/9/17.
  */
-class MovieListViewModel(
-    private val moviesRepository: IMoviesRepository,
-    private val category: String
+@HiltViewModel
+class MovieListViewModel @Inject constructor(
+    private val moviesRepository: IMoviesRepository
 ) : ViewModel() {
   
     var mProgressShow: ObservableBoolean = ObservableBoolean(false)
@@ -36,10 +36,10 @@ class MovieListViewModel(
     val moviesLiveData: LiveData<List<Movie>>
         get() = listMutableLiveData
 
-    fun load() {
+    fun load(category: String) {
         mProgressShow.set(true)
         viewModelScope.launch(Dispatchers.IO) {
-            val movies = getMoviesFromNetwork(page = 1)
+            val movies = getMoviesFromNetwork(category, page = 1)
             Log.d("MovieListViewModel", "movies: $movies")
             listMutableLiveData.postValue(movies)
             mProgressShow.set(false)
@@ -49,7 +49,7 @@ class MovieListViewModel(
     /**
      * For pagination pass the page number here.
      */
-    suspend fun getMoviesFromNetwork(page: Int): List<Movie> {
+    suspend fun getMoviesFromNetwork(category: String, page: Int): List<Movie> {
         return moviesRepository.getMoviesFromApi(category, page)
             .retryWhen { _, attempt -> attempt < 3 }
             .catch { error ->

@@ -1,7 +1,6 @@
 package com.air.movieapp.movielist
 
 import com.air.movieapp.common.Constants
-import com.air.movieapp.common.RestConstants
 import com.air.movieapp.data.model.Movie
 import com.air.movieapp.data.model.Results
 import com.air.movieapp.data.network.IMoviesRepository
