@@ -11,9 +11,6 @@ interface IMoviesRepository {
 
     fun getMoviesFromApi(category: String, page: Int): Flow<List<Movie>>
 
-    suspend fun saveMovieList(category: String, results: Results): List<Movie>
-
     suspend fun getMoviesFromDb(category: String): List<Movie>
 
-    fun setCategoryToMovies(categoryName: String?, movies: List<Movie>)
 }

@@ -13,33 +13,29 @@ import javax.inject.Inject
 /**
  * Created by sagar on 4/8/17.
  */
- class MoviesRepository @Inject constructor(movieApiService: MovieApiService, movieDatabase: MovieDatabase,
-        private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : IMoviesRepository {
-
-     private val localSource = movieDatabase.movieDao()
-     private val networkService = movieApiService
+ class MoviesRepository @Inject constructor(private val movieApiService: MovieApiService,
+   private val movieDatabase: MovieDatabase, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : IMoviesRepository {
 
     override fun getMoviesFromApi(category: String, page: Int): Flow<List<Movie>> {
-        return flow { emit(networkService.getMovies(category, Constants.RestConstants.AP_KEY, page)) }
+        return flow { emit(movieApiService.getMovies(category, Constants.RestConstants.AP_KEY, page)) }
             .map { saveMovieList(category, it) }
             .catch { emit(getMoviesFromDb(category)) }
             .flowOn(dispatcher)
     }
 
-    override suspend fun saveMovieList(category: String, results: Results): List<Movie> {
+    private suspend fun saveMovieList(category: String, results: Results): List<Movie> {
         setCategoryToMovies(category, results.movies)
-        localSource.insertOrUpdate(results.movies)
+        movieDatabase.movieDao().insertOrUpdate(results.movies)
         return getMoviesFromDb(category)
     }
 
     override suspend fun getMoviesFromDb(category: String): List<Movie> {
-        val movies = localSource.getMoviesByCategory(category)
+        val movies = movieDatabase.movieDao().getMoviesByCategory(category)
         Log.d(TAG,"getMoviesFromDb: $movies")
         return movies
-
     }
 
-    override fun setCategoryToMovies(categoryName: String?, movies: List<Movie>) {
+    private fun setCategoryToMovies(categoryName: String?, movies: List<Movie>) {
         for (movie in movies) {
             movie.type = categoryName
         }
