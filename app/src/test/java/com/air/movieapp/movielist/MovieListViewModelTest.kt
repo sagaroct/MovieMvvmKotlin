@@ -1,9 +1,11 @@
 package com.air.movieapp.movielist
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.air.movieapp.common.Constants
 import com.air.movieapp.common.Constants.POPULAR
 import com.air.movieapp.commonutils.MockConstants.MOCK_RESULTS
 import com.air.movieapp.data.network.IMoviesRepository
+import com.air.movieapp.getOrAwaitValue
 import com.air.movieapp.view.movielist.viewmodel.MovieListViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,22 +44,33 @@ class MovieListViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun loadMoviesFromRepositoryAndLoadIntoView() =
+    fun loadMoviesIntoView() =
         runTest {
             Mockito.`when`(mMockMoviesRepository.getMoviesFromApi(POPULAR, page = 1))
                 .thenReturn( flow { emit(MOCK_RESULTS.movies) } )
-            val value = movieListViewModel.getMoviesFromNetwork(POPULAR, page = 1)
+            movieListViewModel.load(POPULAR)
+            val value = movieListViewModel.moviesLiveData.getOrAwaitValue()
+            print(value)
             assertEquals(MOCK_RESULTS.movies, value)
         }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun loadEmptyMoviesIntoView() =
-        runTest {
+    fun loadEmptyMoviesIntoView() {
             Mockito.`when`(mMockMoviesRepository.getMoviesFromApi(POPULAR, page = 1))
                 .thenReturn( flow { emit(emptyList())})
-            val value = movieListViewModel.getMoviesFromNetwork(POPULAR, page = 1)
+            movieListViewModel.load(POPULAR)
+            val value = movieListViewModel.moviesLiveData.getOrAwaitValue()
+            print(value)
             assertEquals(true, value.isEmpty())
         }
+
+    @Test
+    fun sortByTitleValid() {
+            movieListViewModel.sortBy(MOCK_RESULTS.movies, Constants.SortType.TITLE)
+            val value = movieListViewModel.moviesLiveData.getOrAwaitValue()
+            print(value)
+            assertEquals(MOCK_RESULTS.movies.sortedBy { it.title }, value)
+        }
+
 
 }

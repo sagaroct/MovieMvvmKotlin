@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.air.movieapp.R
 import com.air.movieapp.common.Constants
 import com.air.movieapp.common.Constants.TOP_RATED
@@ -25,13 +25,18 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MovieListFragment : Fragment() {
 
-    private val mMovieListViewModel: MovieListViewModel by activityViewModels()
+    private val mMovieListViewModel: MovieListViewModel by viewModels()
     private lateinit var mFragmentMovieBinding: FragmentMovieBinding
 
     lateinit var mMovieListAdapter: MovieListAdapter
 
     @Inject
     lateinit var mMoviesRepository: MoviesRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loadData()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,28 +46,19 @@ class MovieListFragment : Fragment() {
         Log.d(TAG, "onCreateView: called")
         mFragmentMovieBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_movie, container, false)
-        initViewModel()
+        attachViewModelToLayout()
         setAdapter()
         applyObserver()
-        loadData()
         return mFragmentMovieBinding.root
     }
 
-    private fun initViewModel(){
-//        val category = arguments?.getString(CATEGORY) ?: TOP_RATED
-//        val factory = MovieListViewModelFactory(mMoviesRepository, category)
-//        mMovieListViewModel = ViewModelProvider(this, factory).get(MovieListViewModel::class.java)
+    private fun attachViewModelToLayout(){
         mFragmentMovieBinding.movieListViewModel = mMovieListViewModel
     }
 
     private fun setAdapter(){
         mMovieListAdapter = MovieListAdapter(arrayListOf<Movie>())
         mFragmentMovieBinding.rvMovie.adapter = mMovieListAdapter
-    }
-
-    private fun loadData() {
-        val category = arguments?.getString(CATEGORY) ?: TOP_RATED
-        mMovieListViewModel.load(category)
     }
 
     private fun applyObserver() {
@@ -72,12 +68,17 @@ class MovieListFragment : Fragment() {
         }
     }
 
+    private fun loadData() {
+        val category = arguments?.getString(CATEGORY) ?: TOP_RATED
+        mMovieListViewModel.load(category)
+    }
+
     fun filter(searchText: String) {
         mMovieListAdapter.filter.filter(searchText)
     }
 
     fun sortBy(sortType: Constants.SortType?) {
-        mMovieListViewModel.sortBy(sortType)
+        mMovieListViewModel.moviesLiveData.value?.let { mMovieListViewModel.sortBy(it, sortType) }
     }
 
     companion object {

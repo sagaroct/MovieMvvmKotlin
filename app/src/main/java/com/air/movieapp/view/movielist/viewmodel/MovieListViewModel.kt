@@ -40,7 +40,6 @@ class MovieListViewModel @Inject constructor(
         mProgressShow.set(true)
         viewModelScope.launch(Dispatchers.IO) {
             val movies = getMoviesFromNetwork(category, page = 1)
-            Log.d("MovieListViewModel", "movies: $movies")
             listMutableLiveData.postValue(movies)
             mProgressShow.set(false)
         }
@@ -49,7 +48,7 @@ class MovieListViewModel @Inject constructor(
     /**
      * For pagination pass the page number here.
      */
-    suspend fun getMoviesFromNetwork(category: String, page: Int): List<Movie> {
+    private suspend fun getMoviesFromNetwork(category: String, page: Int): List<Movie> {
         return moviesRepository.getMoviesFromApi(category, page)
             .retryWhen { _, attempt -> attempt < 3 }
             .catch { error ->
@@ -58,18 +57,11 @@ class MovieListViewModel @Inject constructor(
             }.firstOrNull() ?: emptyList()
     }
 
-    fun sortBy(sortType: Constants.SortType?) {
+    fun sortBy(movies: List<Movie>, sortType: Constants.SortType?) {
         when (sortType) {
             Constants.SortType.TITLE -> {
-                Collections.sort(listMutableLiveData.value, object : Comparator<Movie> {
-                    override fun compare(m1: Movie, m2: Movie): Int {
-                        if(TextUtils.isEmpty(m1.title) || TextUtils.isEmpty(m2.title)){
-                            return 0
-                        }
-                        return m1.title?.compareTo(m2.title!!) ?: 0
-                    }
-                })
-                listMutableLiveData.setValue(listMutableLiveData.getValue())
+                val sortedMovies = movies.sortedBy { it.title }
+                listMutableLiveData.setValue(sortedMovies)
             }
             else -> {
                 //TODO: Do nothing for now.

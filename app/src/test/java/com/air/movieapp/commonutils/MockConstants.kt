@@ -12,7 +12,10 @@ object MockConstants {
     val MOCK_RESULTS = Results(
         0, listOf(
             Movie(
-                0, "someTitle", "1992-12-10", "soneOverView", 1.00f, Constants.POPULAR
+                1, "someTitle", "1992-12-10", "soneOverView", 1.00f, Constants.POPULAR
+            ),
+            Movie(
+                2, "Tiger", "2023-15-02", "Overview 2", 2.00f, Constants.POPULAR
             )
         )
     )
