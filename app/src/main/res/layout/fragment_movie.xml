@@ -4,7 +4,7 @@
     <data>
         <variable
             name="movieListViewModel"
-            type="com.air.movieapp.viewmodel.MovieListViewModel" />
+            type="com.air.movieapp.view.movielist.viewmodel.MovieListViewModel" />
         <import type="android.view.View"/>
     </data>
 
@@ -16,7 +16,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_movie"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -27,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@android:style/Widget.ProgressBar"
-        android:visibility="@{movieListViewModel.mProgresShow ? View.VISIBLE : View.GONE}"
+        android:visibility="@{movieListViewModel.mProgressShow ? View.VISIBLE : View.GONE}"
         android:layout_gravity="center"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
